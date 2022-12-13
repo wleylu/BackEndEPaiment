@@ -17,7 +17,7 @@ import com.efacture.dev.model.CompteMarchand;
 
 public interface CmRepository extends JpaRepository<CompteMarchand, String> {
 	public CompteMarchand findById(Long id);
-    public CompteMarchand findByClient(String client);
+    public CompteMarchand findByClient(String client);    
     public CompteMarchand findByRefTransaction(String refTransaction);
     public CompteMarchand findByCodeTransaction(String codeTransaction);
     public CompteMarchand findByEmail(String email);

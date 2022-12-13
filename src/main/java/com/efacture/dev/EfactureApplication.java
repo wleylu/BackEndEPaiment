@@ -28,6 +28,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.efacture.dev.DTO.CompteMarchandDTO;
 import com.efacture.dev.model.Commission;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.serviceImpl.CmImpl;
@@ -76,28 +77,14 @@ public class EfactureApplication extends SpringBootServletInitializer implements
 
 	@Override
 	public void run(String... args) throws Exception {
-//		CompteMarchand compteMarchand =new CompteMarchand();
-//		compteMarchand.setClient("140000612");
-//		List<Commission> commissions = new ArrayList<Commission>();
-//		commissions.add(new Commission(1L));
-//		commissions.add(new Commission(2L));
-//		compteMarchand.setCommission(commissions);
-//		CompteMarchand compteMarchands= cmImpl.ajouterCm(compteMarchand);
-//		for(Commission c:compteMarchand.getCommission()) {
-//			System.out.println(c.getIdCommission());
-//		}
-		//System.out.println(compteMarchands.toString());
-	}
-	
-	
-	/*
-
-	@Override
-	public void run(String... args) throws Exception {
-		Commission coms = com.getValeurComm("CIE", 500);
-		System.out.println(coms.getLibelle());
+		
+		CompteMarchandDTO march = cmImpl.getBenificiaire("R2");
+		
+		System.out.println(march.toString());
 		
 	}
-*/
+	
+	
+	
 
 }

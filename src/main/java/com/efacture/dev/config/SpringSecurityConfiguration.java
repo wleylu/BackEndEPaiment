@@ -58,7 +58,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// sample
 
 		http.csrf().disable().cors().and().authorizeRequests()
-				.antMatchers("hellouser", "/helloadmin", "/efacture/facturier/**","Api/paie/presta/cie/","/Api/paie/sodeci/","/Api/pay","/efacture/consultation/**")
+				.antMatchers("hellouser", "/helloadmin", "/efacture/facturier/**","Api/paie/presta/cie/","/Api/paie/sodeci/",
+						"/Api/pay","/efacture/consultation/**")
 				.hasAnyRole("SUPER_ADMIN", "ADMIN", "USER_PERSO", "USER_COM", "AUDIT", "COMPTABILITE", "HELPDESK",
 						"MONETIQUE", "COMPTABILITE", "SUPPORT", "SUPERVISEUR", "PRESTATAIRE","APPLICATION", "USER")
 				.antMatchers("/efacture/consultation/**")

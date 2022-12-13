@@ -4,6 +4,7 @@ package com.efacture.dev.service;
 
 import java.util.List;
 
+import com.efacture.dev.DTO.CompteMarchandDTO;
 //import com.efacture.dev.model.Compte;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.model.MessageStatut;
@@ -13,7 +14,7 @@ public interface ServiceCm {
     
 	public CompteMarchand ajouterCm(CompteMarchand c);
     public List<CompteMarchand> listMarchands();
-       public CompteMarchand getMarchand(String client);
+    public CompteMarchand getMarchand(String client);
     public CompteMarchand getByEmail(String email);
     public String getByMarchandByMail(String email);
     public List<CompteMarchand> rechercheByLogin(String login);
@@ -23,5 +24,6 @@ public interface ServiceCm {
 	MessageStatut addBeneficiaire(CompteMarchand marchand);
 	MessageStatut modifierMarchand(CompteMarchand cptMarchand);
 	List<CompteMarchand> listeBenefParLogin(String refTransaction, String nom, String login);
+	CompteMarchandDTO getBenificiaire(String refTransaction);
 
 }

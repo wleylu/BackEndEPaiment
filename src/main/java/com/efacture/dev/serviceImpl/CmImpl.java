@@ -11,6 +11,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.efacture.dev.DTO.CompteMarchandDTO;
+import com.efacture.dev.MapperDTO.MapperDTO;
 import com.efacture.dev.model.Commission;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.model.Comptes;
@@ -27,24 +29,32 @@ import com.efacture.dev.service.ServiceCm;
 @Transactional
 public class CmImpl implements ServiceCm {
 	
-	@Autowired
+
 	private UserServiceImpl user; 
 	
-	@Autowired
 	private MessageStatutRepository msgRepository;
-    
-	@Autowired
     private CmRepository cmRepository;
-	@Autowired
     private IRelationCptMComRepository relationCptMComRepository;
-	@SuppressWarnings("unused")
-	@Autowired
 	private ErreurGenereImpl erreurGenereImpl;
-    @Autowired
-    private CommissionRepository reposistoryCommission;
+    private CommissionRepository reposistoryCommission; 
+    private MapperDTO mapperDTO;   
+    
     
    
-    @SuppressWarnings("unused")
+    public CmImpl(UserServiceImpl user, MessageStatutRepository msgRepository, CmRepository cmRepository,
+			IRelationCptMComRepository relationCptMComRepository, ErreurGenereImpl erreurGenereImpl,
+			CommissionRepository reposistoryCommission,MapperDTO mapperDTO) {
+		super();
+		this.user = user;
+		this.msgRepository = msgRepository;
+		this.cmRepository = cmRepository;
+		this.relationCptMComRepository = relationCptMComRepository;
+		this.erreurGenereImpl = erreurGenereImpl;
+		this.reposistoryCommission = reposistoryCommission;
+		this.mapperDTO = mapperDTO;
+	}
+
+	@SuppressWarnings("unused")
 	public CompteMarchand ajouterCm(CompteMarchand c) {
 		//Commission com = reposistoryCommission.findById(c.getCommission().getIdCommission()).get();
 		Comptes cpt = null;     //c.getComptes().get(0);
@@ -181,23 +191,40 @@ public class CmImpl implements ServiceCm {
 		return msgRetour;
 	}
     
+	
+	  @Override public CompteMarchand getMarchand(String client) {
+	  
+	  System.out.println("141010060".substring(3, 8)); try { CompteMarchand
+	  compteMarchand = cmRepository.findById(client).get();
+	  
+	  if (compteMarchand != null) { return compteMarchand;
+	  
+	  } else { return new CompteMarchand(); }
+	  
+	  
+	  } catch (Exception e) { return new CompteMarchand(); }
+	  
+	  }
+	 
+    
+    
     @Override
-    public CompteMarchand getMarchand(String client) {
-    	
-    	System.out.println("141010060".substring(3, 8));
+    public CompteMarchandDTO getBenificiaire(String refTransaction) {
     	try {
-    		CompteMarchand compteMarchand = cmRepository.findById(client).get();
+    		CompteMarchand compteMarchand = cmRepository.findByRefTransaction(refTransaction);  		
+    	
     		
 			if (compteMarchand != null) {
-		        return compteMarchand;
+		        return mapperDTO.fromCompteMarchandToDTO(compteMarchand);
 		      
 			} else {
-				return new CompteMarchand();
+				return new CompteMarchandDTO();
 			}
 			
 			
 		} catch (Exception e) {
-			return new CompteMarchand();
+			e.printStackTrace();
+			return new CompteMarchandDTO();
 		}
     	
     }

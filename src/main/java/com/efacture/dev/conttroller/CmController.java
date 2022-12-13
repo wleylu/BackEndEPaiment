@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.efacture.dev.DTO.CompteMarchandDTO;
 import com.efacture.dev.model.Commission;
 //import com.efacture.dev.model.Compte;
 import com.efacture.dev.model.CompteMarchand;
@@ -62,10 +63,20 @@ public class CmController {
         return ResponseEntity.ok(cmImpl.addBeneficiaire(c));  
     }
     
-    @GetMapping("/cm/admin/marchand/{racine}")
-    public ResponseEntity<CompteMarchand> recherchebyClient(@PathVariable String racine){
-        return ResponseEntity.ok(cmImpl.getMarchand(racine));
+    @GetMapping("/cm/admin/benificiaire/{refTransaction}")
+    public ResponseEntity<?> recherchebBeneficiare(@PathVariable(name = "refTransaction") String refTransaction){    	
+       return ResponseEntity.ok(cmImpl.getBenificiaire(refTransaction));
     }
+    
+	
+	  @GetMapping("/cm/admin/marchand/{racine}")
+	  public  ResponseEntity<CompteMarchand> recherchebyClient(@PathVariable String
+	  racine)
+	  { 
+		  return ResponseEntity.ok(cmImpl.getMarchand(racine));
+	  }
+	 
+    
     @GetMapping("/cm/admin/marchandByNom")
     public ResponseEntity<List<CompteMarchand>> recherchebyNom(@RequestParam String nom){
         return ResponseEntity.ok(cmImpl.rechercheByNom(nom));
