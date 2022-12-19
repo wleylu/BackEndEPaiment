@@ -32,6 +32,7 @@ import com.efacture.dev.DTO.CompteMarchandDTO;
 import com.efacture.dev.model.Commission;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.serviceImpl.CmImpl;
+import com.efacture.dev.serviceImpl.TransacImpl;
 
 //import com.efacture.dev.repository.UserRepository;
 
@@ -46,6 +47,9 @@ public class EfactureApplication extends SpringBootServletInitializer implements
 
 	@Autowired
 	private CmImpl cmImpl;
+	
+	@Autowired
+	private TransacImpl transacImpl;
 //	@Autowired
 //	private UserServiceImpl user;
 //	
@@ -78,9 +82,12 @@ public class EfactureApplication extends SpringBootServletInitializer implements
 	@Override
 	public void run(String... args) throws Exception {
 		
-		CompteMarchandDTO march = cmImpl.getBenificiaire("R2");
+	//	transacImpl.verifieCodeConfiramtion("R2", "C2", "85488");
 		
-		System.out.println(march.toString());
+		/*
+		 * CompteMarchandDTO march = cmImpl.getBenificiaire("R2");
+		 * System.out.println(march.toString());
+		 */
 		
 	}
 	

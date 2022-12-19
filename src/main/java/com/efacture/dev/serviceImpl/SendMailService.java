@@ -45,7 +45,8 @@ public class SendMailService {
     	 SimpleMailMessage msg = new SimpleMailMessage();
   
          msg.setTo(mail.getDestinataire());
-         msg.setFrom(this.confApp.getEmail());
+        // msg.setFrom(this.confApp.getEmail());
+         msg.setFrom("ceypaiement@gmail.com");
          msg.setSubject(mail.getObjet());
          msg.setText(mail.getMessage());
          msg.setCc(this.confApp.getEmailcc());

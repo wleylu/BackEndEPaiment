@@ -2,12 +2,21 @@ package com.efacture.dev.serviceImpl;
 
  
 
+import java.awt.Font;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import java.util.Date;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +25,16 @@ import com.efacture.dev.MapperDTO.MapperDTO;
 import com.efacture.dev.model.Commission;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.model.Comptes;
+import com.efacture.dev.model.Mail;
 import com.efacture.dev.model.MessageStatut;
 import com.efacture.dev.model.RelationCptMarchandCommission;
+import com.efacture.dev.model.Transaction;
 import com.efacture.dev.model.Utilisateur;
 import com.efacture.dev.repository.CmRepository;
 import com.efacture.dev.repository.CommissionRepository;
 import com.efacture.dev.repository.IRelationCptMComRepository;
 import com.efacture.dev.repository.MessageStatutRepository;
+import com.efacture.dev.repository.TransactionRepository;
 import com.efacture.dev.service.ServiceCm;
 
 @Service
@@ -38,12 +50,15 @@ public class CmImpl implements ServiceCm {
 	private ErreurGenereImpl erreurGenereImpl;
     private CommissionRepository reposistoryCommission; 
     private MapperDTO mapperDTO;   
+	private SendMailService serviceMail;
+	private TransactionRepository tranRepository;
     
     
    
     public CmImpl(UserServiceImpl user, MessageStatutRepository msgRepository, CmRepository cmRepository,
 			IRelationCptMComRepository relationCptMComRepository, ErreurGenereImpl erreurGenereImpl,
-			CommissionRepository reposistoryCommission,MapperDTO mapperDTO) {
+			CommissionRepository reposistoryCommission,MapperDTO mapperDTO,SendMailService serviceMail,
+			TransactionRepository tranRepository) {
 		super();
 		this.user = user;
 		this.msgRepository = msgRepository;
@@ -52,6 +67,8 @@ public class CmImpl implements ServiceCm {
 		this.erreurGenereImpl = erreurGenereImpl;
 		this.reposistoryCommission = reposistoryCommission;
 		this.mapperDTO = mapperDTO;
+		this.serviceMail = serviceMail;
+		this.tranRepository = tranRepository;
 	}
 
 	@SuppressWarnings("unused")
@@ -153,7 +170,7 @@ public class CmImpl implements ServiceCm {
 		marchand.setValide("N");
 		marchand.setEtatoper("NP"); //Non payé ===PA: Payé
 		
-		if (cmRepository.findByRefTransaction(marchand.getRefTransaction()) != null) {
+		if (cmRepository.findByRefTransac(marchand.getRefTransaction()) != null) {
 			msgRetour.setCodeMsg("03");
 			msgRetour.setLibelle(msgRepository.getLibelleMessage("03"));			
 			return msgRetour;
@@ -211,7 +228,7 @@ public class CmImpl implements ServiceCm {
     @Override
     public CompteMarchandDTO getBenificiaire(String refTransaction) {
     	try {
-    		CompteMarchand compteMarchand = cmRepository.findByRefTransaction(refTransaction);  		
+    		CompteMarchand compteMarchand = cmRepository.findByRefTransac(refTransaction);  		
     	
     		
 			if (compteMarchand != null) {
@@ -242,7 +259,7 @@ public class CmImpl implements ServiceCm {
 			if (march != null) {
 				
 				if (!march.getRefTransaction().equals(march.getRefTransaction())) {
-					if (cmRepository.findByRefTransaction(cptMarchand.getRefTransaction()) != null) {
+					if (cmRepository.findByRefTransac(cptMarchand.getRefTransaction()) != null) {
 					
 						msgRetour.setCodeMsg("03");
 						msgRetour.setLibelle(msgRepository.getLibelleMessage("03"));			
@@ -433,5 +450,70 @@ public class CmImpl implements ServiceCm {
 		}
 	}
 	
+
+	
+	@Override
+	public MessageStatut generateCodeConfirmation(String refTransaction) {
+	
+		CompteMarchand marchand = new CompteMarchand();
+		String code = RandomStringUtils.randomNumeric(4);
+		Mail mail = new Mail();
+		long msgStatus = 0;
+		MessageStatut retourTrt = new MessageStatut("01", msgRepository.getLibelleMessage("01"));
+		Date mdate =new Date(System.currentTimeMillis()+300000);
+		
+		try {
+			marchand = cmRepository.findByRefTransac(refTransaction);
+			
+			  if (marchand != null) 
+			  {
+				 marchand.setCodeConfirmation(code);
+				 marchand.setDateValidCode(mdate); 
+				 String message= "Bonjour M/Mme/Mlle "+marchand.getNom()+",\n"
+						 +"Votre code de confirmation est le suivant : "+code+"\n"
+						 +"Nous vous prions de ne communiquer se code à personne, il est strictement privé et confidentiel.\n"
+						 +"Merci pour votre compréhension";
+				 
+				 mail.setDestinataire(marchand.getEmail());	
+				 mail.setObjet("Code de confirmation - EPaiement");
+				 mail.setMessage(message);
+				 //msgStatus = serviceMail.sendMail(mail);				
+				
+				  if (cmRepository.save(marchand) != null) {
+					/*
+					   if (msgStatus>0)
+						  retourTrt = new MessageStatut("08", msgRepository.getLibelleMessage("08"));
+					  }
+					  */
+					  
+					  retourTrt = new MessageStatut("08", msgRepository.getLibelleMessage("08"));
+					  
+				  }
+			  }
+			
+		} catch (Exception e) {
+			retourTrt = new MessageStatut("99", msgRepository.getLibelleMessage("99"));
+		}
+		
+		
+		
+		return retourTrt;
+	}
+
+	@Override
+	public List<Transaction> getLisTransactions(String loginAdd) {
+		
+		return tranRepository.getListeTransaction(loginAdd);
+	}
+	
+	@Override
+	public List<CompteMarchandDTO> listePaiement(String loginAdd){	
+		List<CompteMarchand> marchands = cmRepository.listePaiement(loginAdd);
+		List<CompteMarchandDTO> marchandDTO = marchands.stream()
+				.map(march -> mapperDTO.fromCompteMarchandToDTO(march))
+				.collect(Collectors.toList());		
+		
+		return marchandDTO;
+	}
     
 }

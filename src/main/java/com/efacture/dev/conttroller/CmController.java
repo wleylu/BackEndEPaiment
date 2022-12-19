@@ -23,24 +23,34 @@ import com.efacture.dev.model.Commission;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.model.MessageStatut;
 import com.efacture.dev.serviceImpl.CmImpl;
+import com.efacture.dev.serviceImpl.TransacImpl;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/efacture")
 public class CmController {
-    @Autowired
+    
     private CmImpl cmImpl;
+    private TransacImpl transacImpl;
+    
+    
+    
     
 
-    @GetMapping("/cm/admin/marchands")
+    public CmController(CmImpl cmImpl, TransacImpl transacImpl) {
+		super();
+		this.cmImpl = cmImpl;
+		this.transacImpl = transacImpl;
+	}
+
+	@GetMapping("/cm/admin/marchands")
     public ResponseEntity<List<CompteMarchand>> recupererCptMarchand1(){
         try {
         	return ResponseEntity.ok(cmImpl.listMarchands());
 		} catch (Exception e) {
 			// TODO: handle exception
 			return ResponseEntity.ok(new ArrayList<>());
-		}
-        
+		}        
     }
     
 	/*
@@ -63,11 +73,27 @@ public class CmController {
         return ResponseEntity.ok(cmImpl.addBeneficiaire(c));  
     }
     
+    @PostMapping("/cm/admin/transaction")
+    public ResponseEntity<?> transactionMarchand(@RequestBody CompteMarchandDTO march){      
+    	return  ResponseEntity.ok(transacImpl.addTransaction(march));
+    	
+       //return ResponseEntity.ok(transacImpl.addTransaction(march));
+    }
+    
     @GetMapping("/cm/admin/benificiaire/{refTransaction}")
     public ResponseEntity<?> recherchebBeneficiare(@PathVariable(name = "refTransaction") String refTransaction){    	
        return ResponseEntity.ok(cmImpl.getBenificiaire(refTransaction));
     }
     
+    @GetMapping("/cm/admin/listransations/{loginAdd}")
+    public ResponseEntity<?> listeTransation(@PathVariable(name = "loginAdd") String loginAdd){    	
+       return ResponseEntity.ok(cmImpl.listePaiement(loginAdd));
+    }
+    
+    @GetMapping("/cm/admin/generateCode/{refTransaction}")
+    public ResponseEntity<MessageStatut> generateCode(@PathVariable (name="refTransaction") String refTransaction ){    	
+       return ResponseEntity.ok(cmImpl.generateCodeConfirmation(refTransaction));
+    }
 	
 	  @GetMapping("/cm/admin/marchand/{racine}")
 	  public  ResponseEntity<CompteMarchand> recherchebyClient(@PathVariable String

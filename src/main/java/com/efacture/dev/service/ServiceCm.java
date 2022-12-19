@@ -8,6 +8,7 @@ import com.efacture.dev.DTO.CompteMarchandDTO;
 //import com.efacture.dev.model.Compte;
 import com.efacture.dev.model.CompteMarchand;
 import com.efacture.dev.model.MessageStatut;
+import com.efacture.dev.model.Transaction;
 
 
 public interface ServiceCm {
@@ -25,5 +26,8 @@ public interface ServiceCm {
 	MessageStatut modifierMarchand(CompteMarchand cptMarchand);
 	List<CompteMarchand> listeBenefParLogin(String refTransaction, String nom, String login);
 	CompteMarchandDTO getBenificiaire(String refTransaction);
+	MessageStatut generateCodeConfirmation(String refTransaction);
+	List<Transaction> getLisTransactions(String loginAdd);
+	List<CompteMarchandDTO> listePaiement(String loginAdd);
 
 }

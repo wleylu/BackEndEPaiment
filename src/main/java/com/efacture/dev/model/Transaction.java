@@ -11,7 +11,12 @@ import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@NoArgsConstructor
 public class Transaction {
 
 	@Id
@@ -37,11 +42,14 @@ public class Transaction {
 	private String refOld;
 	private String statutTraitement;
 	private long codeTraitement;
+	
+	private double  montant;
+	private String refTransaction;
+	private String codeTransaction;
+	private String codeConfirmation;	
+	private String loginAdd;
+	
 
-	public Transaction() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public Transaction(long id_transaction, String prefixe, String facturier, Date datOper, String codOper,
 			String identifiantFacture, String compteDebit, String compteCredit, long mntOper, long mntFacture,
@@ -69,157 +77,7 @@ public class Transaction {
 		this.codeTraitement = codeTraitement;
 	}
 
-	public long getId() {
-		return id_transaction;
-	}
-
-	public void setId(long id_transaction) {
-		this.id_transaction = id_transaction;
-	}
-
-	public String getPrefixe() {
-		return prefixe;
-	}
-
-	public void setPrefixe(String prefixe) {
-		this.prefixe = prefixe;
-	}
-
-	public String getFacturier() {
-		return facturier;
-	}
-
-	public void setFacturier(String facturier) {
-		this.facturier = facturier;
-	}
-
-	public Date getDatOper() {
-		return datOper;
-	}
-
-	public void setDatOper(Date datOper) {
-		this.datOper = datOper;
-	}
-
-	public String getCodOper() {
-		return codOper;
-	}
-
-	public void setCodOper(String codOper) {
-		this.codOper = codOper;
-	}
-
-	public String getIdentifiantFacture() {
-		return identifiantFacture;
-	}
-
-	public void setIdentifiantFacture(String identifiantFacture) {
-		this.identifiantFacture = identifiantFacture;
-	}
-
-	public String getCompteDebit() {
-		return compteDebit;
-	}
-
-	public void setCompteDebit(String compteDebit) {
-		this.compteDebit = compteDebit;
-	}
-
-	public String getCompteCredit() {
-		return compteCredit;
-	}
-
-	public void setCompteCredit(String compteCredit) {
-		this.compteCredit = compteCredit;
-	}
-
-	public long getMntOper() {
-		return mntOper;
-	}
-
-	public void setMntOper(long mntOper) {
-		this.mntOper = mntOper;
-	}
-
-	public long getMntFacture() {
-		return mntFacture;
-	}
-
-	public void setMntFacture(long mntFacture) {
-		this.mntFacture = mntFacture;
-	}
-
-	public long getMntFrais() {
-		return mntFrais;
-	}
-
-	public void setMntFrais(long mntFrais) {
-		this.mntFrais = mntFrais;
-	}
-
-	public long getMntMarchand() {
-		return mntMarchand;
-	}
-
-	public void setMntMarchand(long mntMarchand) {
-		this.mntMarchand = mntMarchand;
-	}
-
-	public long getMntFraisMarchand() {
-		return mntFraisMarchand;
-	}
-
-	public void setMntFraisMarchand(long mntFraisMarchand) {
-		this.mntFraisMarchand = mntFraisMarchand;
-	}
-
-	public long getMntTimbre() {
-		return mntTimbre;
-	}
-
-	public void setMntTimbre(long mntTimbre) {
-		this.mntTimbre = mntTimbre;
-	}
-
-	public String getLibelleOper() {
-		return libelleOper;
-	}
-
-	public void setLibelleOper(String libelleOper) {
-		this.libelleOper = libelleOper;
-	}
-
-	public String getCompteCom() {
-		return compteCom;
-	}
-
-	public void setCompteCom(String compteCom) {
-		this.compteCom = compteCom;
-	}
-
-	public String getRefOld() {
-		return refOld;
-	}
-
-	public void setRefOld(String refOld) {
-		this.refOld = refOld;
-	}
-
-	public String getStatutTraitement() {
-		return statutTraitement;
-	}
-
-	public void setStatutTraitement(String statutTraitement) {
-		this.statutTraitement = statutTraitement;
-	}
-
-	public long getCodeTraitement() {
-		return codeTraitement;
-	}
-
-	public void setCodeTraitement(long codeTraitement) {
-		this.codeTraitement = codeTraitement;
-	}
+	
 
 	@Override
 	public String toString() {

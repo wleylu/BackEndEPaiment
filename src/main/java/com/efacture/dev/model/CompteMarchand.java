@@ -59,12 +59,15 @@ public class CompteMarchand implements Serializable {
 	private String valide="N";
 	@Column(length = 2)
 	private String etatoper;
-
+	private String codeConfirmation;
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+	private Date dateValidCode;	
 	private String adCm;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-	private Date dateModification = new Date(System.currentTimeMillis());;
+	private Date dateModification = new Date(System.currentTimeMillis());
 	
 	private String loginModification;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -208,6 +211,22 @@ public class CompteMarchand implements Serializable {
 	}
 	
 	
+
+	public String getCodeConfirmation() {
+		return codeConfirmation;
+	}
+
+	public void setCodeConfirmation(String codeConfirmation) {
+		this.codeConfirmation = codeConfirmation;
+	}
+
+	public Date getDateValidCode() {
+		return dateValidCode;
+	}
+
+	public void setDateValidCode(Date dateValidCode) {
+		this.dateValidCode = dateValidCode;
+	}
 
 	public String getValide() {
 		return valide;
@@ -519,7 +538,7 @@ public class CompteMarchand implements Serializable {
 				+ ", dateDelivr=" + dateDelivr + ", email=" + email + ", login=" + login + ", adCm=" + adCm
 				+ ", dateModification=" + dateModification + ", loginModification=" + loginModification
 				+ ", dateDesactivation=" + dateDesactivation + ", loginDesactivation=" + loginDesactivation
-				+ ", dateCreation=" + dateCreation + ", loginAdd="+ loginAdd + "]";
+				+ ", dateCreation=" + dateCreation + ",dateValidCode="+ dateValidCode +", loginAdd="+ loginAdd + "]";
 	}
 
 }
