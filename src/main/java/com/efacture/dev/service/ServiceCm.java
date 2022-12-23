@@ -2,6 +2,7 @@ package com.efacture.dev.service;
 
  
 
+import java.util.Date;
 import java.util.List;
 
 import com.efacture.dev.DTO.CompteMarchandDTO;
@@ -29,5 +30,6 @@ public interface ServiceCm {
 	MessageStatut generateCodeConfirmation(String refTransaction);
 	List<Transaction> getLisTransactions(String loginAdd);
 	List<CompteMarchandDTO> listePaiement(String loginAdd);
+	List<CompteMarchandDTO> listeTransaction(String loginAdd,String refTran,String codeTran,String dateDebut,String DateFin);
 
 }

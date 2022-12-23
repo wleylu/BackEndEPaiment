@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,6 +89,15 @@ public class CmController {
     @GetMapping("/cm/admin/listransations/{loginAdd}")
     public ResponseEntity<?> listeTransation(@PathVariable(name = "loginAdd") String loginAdd){    	
        return ResponseEntity.ok(cmImpl.listePaiement(loginAdd));
+    }
+    
+    @GetMapping("/cm/admin/listransactions")
+    public ResponseEntity<?> listeTransaction(@RequestParam String loginAdd,
+    		@RequestParam String refTran,
+    		@RequestParam String codeTran,
+    		@RequestParam String dateDebut,
+    		@RequestParam String dateFin){    	
+       return ResponseEntity.ok(cmImpl.listeTransaction(loginAdd,refTran,codeTran,dateDebut,dateFin));
     }
     
     @GetMapping("/cm/admin/generateCode/{refTransaction}")

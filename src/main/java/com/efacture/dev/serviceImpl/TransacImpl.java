@@ -47,11 +47,8 @@ public class TransacImpl implements ServiceTransaction {
 		int verifMyCode= 0;
 		
 		
-		try {
-			System.out.println("resultat de la vérification: ICI");
+		try {		
 			verifMyCode = verifieCodeConfiramtion(marchand.getRefTransaction(),marchand.getCodeTransaction(),marchand.getCodeConfirmation());
-			System.out.println("resultat de la vérification: "+verifMyCode);
-			
 			switch (verifMyCode) {
 			case 0:
 				msgRetour= new MessageStatut("10", messageStatutRepository.getLibelleMessage("10"));
@@ -67,21 +64,30 @@ public class TransacImpl implements ServiceTransaction {
 			default:
 				msgRetour = new MessageStatut("99", messageStatutRepository.getLibelleMessage("99"));		
 				break;
-			}
-			
-			
-			System.out.println("resultat de la vérification: "+verifMyCode);
+			}			
 			if(verifMyCode == 2) {
-				transaction.setRefTransaction(marchand.getRefTransaction());
-				transaction.setCodeConfirmation(marchand.getCodeConfirmation());
-				transaction.setCodeTransaction(marchand.getCodeTransaction());
-				transaction.setMontant(marchand.getMontant());
-				transaction.setDatOper(new Date()); 
-				transaction.setStatutTraitement("00");
-				transaction.setLoginAdd(marchand.getLoginAdd());				
-				if (transactionRepository.save(transaction) != null) {
-					msgRetour = new MessageStatut("00", messageStatutRepository.getLibelleMessage("00"));
-				}
+				
+				CompteMarchand m = cmRepository.getMarchandPay(marchand.getRefTransaction(), marchand.getCodeTransaction(), marchand.getCodeConfirmation());
+				if (m!=null) {
+					m.setEtatoper("PA");
+					m.setLoginModification(marchand.getLoginMaj());
+					m.setValide("S"); //paiement soldé , bénéficiaire a reçu ces fonds
+					m.setDateModification(new Date());
+					if(cmRepository.save(m) != null) {
+
+						transaction.setRefTransaction(marchand.getRefTransaction());
+						transaction.setCodeConfirmation(marchand.getCodeConfirmation());
+						transaction.setCodeTransaction(marchand.getCodeTransaction());
+						transaction.setMontant(marchand.getMontant());
+						transaction.setDatOper(new Date()); 
+						transaction.setStatutTraitement("00");
+						transaction.setLoginAdd(marchand.getLoginAdd());				
+						if (transactionRepository.save(transaction) != null) {
+							
+							msgRetour = new MessageStatut("00", messageStatutRepository.getLibelleMessage("00"));
+						}
+					}
+				}				
 				
 			}
 		} catch (Exception e) {

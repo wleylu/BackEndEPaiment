@@ -477,14 +477,14 @@ public class CmImpl implements ServiceCm {
 				 mail.setDestinataire(marchand.getEmail());	
 				 mail.setObjet("Code de confirmation - EPaiement");
 				 mail.setMessage(message);
-				 //msgStatus = serviceMail.sendMail(mail);				
+				 msgStatus = serviceMail.sendMail(mail);				
 				
 				  if (cmRepository.save(marchand) != null) {
-					/*
-					   if (msgStatus>0)
+					
+					   if (msgStatus>0) {
 						  retourTrt = new MessageStatut("08", msgRepository.getLibelleMessage("08"));
 					  }
-					  */
+					  
 					  
 					  retourTrt = new MessageStatut("08", msgRepository.getLibelleMessage("08"));
 					  
@@ -509,6 +509,27 @@ public class CmImpl implements ServiceCm {
 	@Override
 	public List<CompteMarchandDTO> listePaiement(String loginAdd){	
 		List<CompteMarchand> marchands = cmRepository.listePaiement(loginAdd);
+		List<CompteMarchandDTO> marchandDTO = marchands.stream()
+				.map(march -> mapperDTO.fromCompteMarchandToDTO(march))
+				.collect(Collectors.toList());		
+		
+		return marchandDTO;
+	}
+	
+	@Override
+	public List<CompteMarchandDTO> listeTransaction(String loginAdd,String refTran,String codeTran,String dateDebut,String dateFin){
+	
+		System.out.println("dade debut : "+dateDebut);
+		System.out.println("dade debut : "+dateFin);
+		List<CompteMarchand> marchands = new ArrayList<CompteMarchand>();
+		if (dateDebut == "" && dateFin == "") {
+			marchands = cmRepository.listeTransaction(loginAdd,refTran,codeTran);
+		}
+		else {
+			System.out.println("ici 2");
+			marchands = cmRepository.listeTransacDate(loginAdd,refTran,codeTran,dateDebut,dateFin); 
+			}
+		
 		List<CompteMarchandDTO> marchandDTO = marchands.stream()
 				.map(march -> mapperDTO.fromCompteMarchandToDTO(march))
 				.collect(Collectors.toList());		
